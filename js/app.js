@@ -2,73 +2,13 @@
 
 let animalObjArr = [];
 let keywordOpt = [];
-let arrFeltier=[];
-let page="data/page-1.json"
-jax(page)
-$("#buttons").on("click",(event)=>{
-    // console.log(event.target.id);
- 
-   if (event.target.id==="page1") {
-    page="data/page-1.json"
-   } else if(event.target.id==="page2") {
-    page="data/page-2.json" 
-   }
-   $(".photo-template").remove()
-   
-   $("#typeAnimal option ").remove()
-   $("#typeAnimal").append(`<option value=${"default"}>${"All Animals"}</option>`);
-   jax(page)
-})
+let arrFiltered = [];
+let page = "data/page-1.json"
+let typeAnimal = $('#typeAnimal');
+let typeSorted = ""
+let typeSortedpre = $("#typeSorted")
+let photoSection = $('#mustache').html();
 
-
-
-function jax(page) {
-    $.ajax(page)
-    .then(data => {
-       animalObjArr = [];
-       keywordOpt = [];
-        // let arrFeltier=[];
-        console.log(page);
-        let typeAnimal = $('#typeAnimal');
-        let typeSorted = ""
-        let typeSortedpre = $("#typeSorted")
-
-        typeSortedpre.click(function (event) {
-            console.log(event.target.value)
-            typeSorted = event.target.value
-            sortedNum(typeSorted)
-            //delete image all
-            $("main").empty()
-            animalObjArr.forEach(item => {
-                item.renderPhoto();
-                
-            })
-
-        })
-
-        data.forEach(ele => {
-            new Animal(ele.image_url, ele.title, ele.description, ele.keyword, ele.horns);
-        });
-        console.log(animalObjArr);
-
-
-        animalObjArr.forEach(item => {
-            item.renderPhoto();
-            if (keywordOpt.includes(item.keyword) === false) {
-                keywordOpt.push(item.keyword);
-                typeAnimal.append(`<option value="${item.keyword}">${item.keyword}</option>`);
-
-            }
-        })
-        $('.photo-template').first().hide();
-        console.log(keywordOpt);
-        typeAnimal.click(function(){
-            filter(event)
-        })
-
-    });
-    
-}
 
 function Animal(image_url, title, description, keyword, horns) {
     this.image_url = image_url;
@@ -80,18 +20,60 @@ function Animal(image_url, title, description, keyword, horns) {
     animalObjArr.push(this);
 }
 
-
 Animal.prototype.renderPhoto = function () {
-    let photoSection = $('#mustache').html();
     let addPhoto = Mustache.render(photoSection, this);
     $('main').append(addPhoto);
 }
 
 
-function sortedNum(typeSorted) {
+$("#buttons").on("click", (event) => {
+    if (event.target.id === "page1") {
+        page = "data/page-1.json"
+    } else if (event.target.id === "page2") {
+        page = "data/page-2.json"
+    }
+    $(".photo-template").remove();
+    $("#typeAnimal option ").remove()
+    $("#typeAnimal").append(`<option value=${"default"}>${"All Animals"}</option>`);
+    jax(page);
+})
 
-    if (typeSorted == "byNum") {
-   animalObjArr.sort((a, b) => {
+typeAnimal.click(function (event) {
+    filter(event.target.value);
+    $('main').empty();
+    arrFiltered.forEach(item => {
+        item.renderPhoto();
+    });
+})
+
+typeSortedpre.click(function (event) {
+    typeSorted = event.target.value;
+    sorted(typeSorted);
+    $('main').empty();
+    arrFiltered.forEach(item => {
+        item.renderPhoto();
+    });
+})
+
+function jax(page) {
+    $.ajax(page)
+        .then(data => {
+            animalObjArr=[];
+            keywordOpt=[];
+            data.forEach(ele => {
+                new Animal(ele.image_url, ele.title, ele.description, ele.keyword, ele.horns);
+            });
+            $('main').empty();
+            animalObjArr.forEach(item => {
+                item.renderPhoto();
+                filterOptions(item);
+            })
+        });
+}
+
+function sorted(value) {
+    if (value == "byNum") {
+        arrFiltered.sort((a, b) => {
             if (a.horns > b.horns) {
                 return 1;
             } else if (a.horns < b.horns) {
@@ -100,35 +82,44 @@ function sortedNum(typeSorted) {
                 return 0
             }
         })
-    } else if (typeSorted == "byTitle") {
-       animalObjArr.sort((a, b) => {
+    } else if (value == "byTitle") {
+        arrFiltered.sort((a, b) => {
             if (a.title.toUpperCase() > b.title.toUpperCase()) {
                 return 1;
             } else if (a.title.toUpperCase() < b.title.toUpperCase()) {
-                return -1
+                return -1;
             } else {
-                return 0
+                return 0;
             }
         })
     }
 
 }
 
-function filter(event) {
-    // arrFeltier=[]
+function filter(value) {
+    arrFiltered=[];
+
     animalObjArr.forEach(item => {
-        if (event.target.value !== 'default') {
-            if (item.keyword === event.target.value) {
+        if (value !== 'default') {
+            if (item.keyword === value) {
                 $(`.${item.keyword}`).show();
-                arrFeltier.push(item)
+                arrFiltered.push(item)
             } else {
                 $(`.${item.keyword}`).hide();
             }
         } else {
             $(`.${item.keyword}`).show();
-            arrFeltier.push(item)
+            arrFiltered.push(item)
         }
 
     })
-    console.log(event.target.value);
 }
+
+function filterOptions(item){
+    if (keywordOpt.includes(item.keyword) === false) {
+        keywordOpt.push(item.keyword);
+        typeAnimal.append(`<option value="${item.keyword}">${item.keyword}</option>`);
+    }
+}
+
+jax(page);
