@@ -9,6 +9,7 @@ let typeSorted = ""
 let typeSortedpre = $("#typeSorted")
 let photoSection = $('#mustache').html();
 
+
 function Animal(image_url, title, description, keyword, horns) {
     this.image_url = image_url;
     this.title = title;
