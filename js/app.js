@@ -2,12 +2,32 @@
 
 let animalObjArr = [];
 let keywordOpt = [];
+let arrFeltier=[];
+let page="data/page-1.json"
+jax(page)
+$("#buttons").on("click",(event)=>{
+    // console.log(event.target.id);
+ 
+   if (event.target.id==="page1") {
+    page="data/page-1.json"
+   } else if(event.target.id==="page2") {
+    page="data/page-2.json" 
+   }
+   $(".photo-template").remove()
+   
+   $("#typeAnimal option ").remove()
+   jax(page)
+})
 
 
 
-
-$.ajax('data/page-1.json')
+function jax(page) {
+    $.ajax(page)
     .then(data => {
+       animalObjArr = [];
+       keywordOpt = [];
+        // let arrFeltier=[];
+        console.log(page);
         let typeAnimal = $('#typeAnimal');
         let typeSorted = ""
         let typeSortedpre = $("#typeSorted")
@@ -46,6 +66,8 @@ $.ajax('data/page-1.json')
         })
 
     });
+    
+}
 
 function Animal(image_url, title, description, keyword, horns) {
     this.image_url = image_url;
@@ -68,7 +90,7 @@ Animal.prototype.renderPhoto = function () {
 function sortedNum(typeSorted) {
 
     if (typeSorted == "byNum") {
-        animalObjArr.sort((a, b) => {
+   animalObjArr.sort((a, b) => {
             if (a.horns > b.horns) {
                 return 1;
             } else if (a.horns < b.horns) {
@@ -78,7 +100,7 @@ function sortedNum(typeSorted) {
             }
         })
     } else if (typeSorted == "byTitle") {
-        animalObjArr.sort((a, b) => {
+       animalObjArr.sort((a, b) => {
             if (a.title.toUpperCase() > b.title.toUpperCase()) {
                 return 1;
             } else if (a.title.toUpperCase() < b.title.toUpperCase()) {
@@ -92,15 +114,18 @@ function sortedNum(typeSorted) {
 }
 
 function filter(event) {
+    // arrFeltier=[]
     animalObjArr.forEach(item => {
         if (event.target.value !== 'default') {
             if (item.keyword === event.target.value) {
                 $(`.${item.keyword}`).show();
+                arrFeltier.push(item)
             } else {
                 $(`.${item.keyword}`).hide();
             }
         } else {
             $(`.${item.keyword}`).show();
+            arrFeltier.push(item)
         }
 
     })
