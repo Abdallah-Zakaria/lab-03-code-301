@@ -9,10 +9,12 @@ body {
 }
 main{
     height: 2670px;
-    padding-left: 157px ;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 section {
-    float: left;
+  
     margin: 20px;
     
 }
