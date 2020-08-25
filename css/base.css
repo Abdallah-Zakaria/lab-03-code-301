@@ -1,0 +1,18 @@
+html{
+    font-family: 'Raleway', sans-serif;
+    
+}
+body {
+    margin:  auto ;
+    text-align: center;
+    background-color: silver;
+}
+main{
+    height: 2670px;
+    padding-left: 157px ;
+}
+section {
+    float: left;
+    margin: 20px;
+    
+}

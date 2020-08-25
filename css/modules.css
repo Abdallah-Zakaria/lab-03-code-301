@@ -1,0 +1,21 @@
+.photo-template img{
+    width : 200px;
+    height: 200px;
+}
+section h2 {
+    font-weight: bolder;
+    font-size: 22px;
+    margin-bottom: 10px ;
+}
+section img {
+    border-radius: 0px 50px;
+    margin-bottom:7px ;
+}
+section p {
+    font-weight: bold;
+}
+footer {
+    font-weight: bolder;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
