@@ -16,6 +16,7 @@ $("#buttons").on("click",(event)=>{
    $(".photo-template").remove()
    
    $("#typeAnimal option ").remove()
+   $("#typeAnimal").append(`<option value=${"default"}>${"All Animals"}</option>`);
    jax(page)
 })
 
